@@ -1,4 +1,4 @@
-import { SocialAccount } from "../types/social";
+import type { SocialAccount } from "../types/social";
 
 // Mock data — simulates a real API response
 export const getDefaultAccounts = (): SocialAccount[] => [
