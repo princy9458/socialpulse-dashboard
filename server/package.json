@@ -1,0 +1,16 @@
+{
+  "name": "socialpulse-linkedin-backend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.8",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "twitter-api-v2": "^1.29.0"
+  }
+}
