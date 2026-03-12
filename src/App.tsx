@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { useEffect } from 'react';
 import Dashboard from './pages/Dashboard';
 import { initAnalytics, trackPageView } from './analytics';
@@ -14,13 +13,3 @@ const App = (): JSX.Element => {
 };
 
 export default App;
-=======
-import "./index.css";
-import Dashboard from "./pages/Dashboard";
-
-function App() {
-  return <Dashboard />;
-}
-
-export default App;
->>>>>>> 2236a15784afac7ab16982ec8273df530c81166b
