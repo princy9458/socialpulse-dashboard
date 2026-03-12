@@ -1,0 +1,161 @@
+/* ── Dashboard.css ──────────────────────────────────────────── */
+
+.dashboard {
+  min-height: 100vh;
+  background: #080b14;
+  display: flex;
+  flex-direction: column;
+  color: #e8ecf4;
+}
+
+/* ── Navbar ── */
+.dashboard__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 40px;
+  background: rgba(255, 255, 255, 0.025);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(12px);
+}
+
+.dashboard__nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboard__nav-logo {
+  font-size: 22px;
+}
+
+.dashboard__nav-name {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #a5b4fc, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dashboard__nav-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashboard__nav-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #7c85a8;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 100px;
+  padding: 4px 14px;
+}
+
+.dashboard__nav-date {
+  font-size: 12px;
+  color: #7c85a8;
+  font-weight: 500;
+}
+
+/* ── Hero ── */
+.dashboard__hero {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+  padding: 48px 40px 32px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, rgba(165,180,252,0.04) 0%, transparent 100%);
+}
+
+.dashboard__hero-title {
+  margin: 0 0 8px;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1.15;
+  background: linear-gradient(135deg, #e8ecf4 30%, #a5b4fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dashboard__hero-sub {
+  margin: 0;
+  font-size: 15px;
+  color: #7c85a8;
+  font-weight: 500;
+  max-width: 420px;
+}
+
+/* Quick-stat chips */
+.dashboard__chips {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.dashboard__chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 16px;
+  padding: 14px 18px;
+  min-width: 110px;
+}
+
+.dashboard__chip-icon {
+  font-size: 22px;
+}
+
+.dashboard__chip-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: #e8ecf4;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.dashboard__chip-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #7c85a8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 2px;
+}
+
+/* ── Main ── */
+.dashboard__main {
+  flex: 1;
+  padding: 40px;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* ── Footer ── */
+.dashboard__footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 40px;
+  font-size: 12px;
+  color: #4a5070;
+  font-weight: 500;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}

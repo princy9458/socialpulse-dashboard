@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export enum SocialPlatform {
   Instagram = 'Instagram',
   LinkedIn = 'LinkedIn',
@@ -23,4 +24,31 @@ export interface AnalyticsSummary {
   avgEngagementRate: number;
   totalPosts: number;
   connectedCount: number;
+=======
+// Types for SocialPulse Marketing Dashboard
+
+export type PlatformName = "Instagram" | "LinkedIn" | "Twitter (X)" | "Facebook";
+
+export interface SocialAccount {
+  id: string;
+  name: PlatformName;
+  icon: string;
+  colorFrom: string;
+  colorTo: string;
+  connected: boolean;
+  followers: number;
+  engagementRate: number;
+  totalPosts: number;
+  description: string;
+}
+
+export interface SocialCardProps {
+  account: SocialAccount;
+  onToggle: (id: string) => void;
+}
+
+export interface SocialHubProps {
+  accounts: SocialAccount[];
+  onToggle: (id: string) => void;
+>>>>>>> 2236a15784afac7ab16982ec8273df530c81166b
 }
