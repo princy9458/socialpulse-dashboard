@@ -3,6 +3,7 @@ import express from "express";
 import axios from "axios";
 import cors from "cors";
 import { postTweet, verifyTwitterCredentials } from "./twitterService.js";
+import { publishFacebookPost, publishInstagramPhoto } from "./metaService.js";
 
 const app = express();
 
@@ -71,6 +72,42 @@ app.post("/twitter/post", async (req, res) => {
     res.json({ ok: true, tweet: tweet?.data ?? tweet });
   } catch (error) {
     res.status(500).json({ error: error.message || "Twitter posting failed." });
+  }
+});
+
+app.post("/instagram/post", async (req, res) => {
+  const { caption, imageUrl } = req.body || {};
+
+  if (!imageUrl || !imageUrl.trim()) {
+    return res.status(400).json({ error: "Image URL is required for Instagram publishing." });
+  }
+
+  try {
+    const response = await publishInstagramPhoto({
+      caption: caption || "",
+      imageUrl: imageUrl.trim(),
+    });
+    res.json({ ok: true, result: response });
+  } catch (error) {
+    res.status(500).json({ error: error.message || "Instagram publishing failed." });
+  }
+});
+
+app.post("/facebook/post", async (req, res) => {
+  const { message, imageUrl } = req.body || {};
+
+  if (!message || !message.trim()) {
+    return res.status(400).json({ error: "Post text is required for Facebook." });
+  }
+
+  try {
+    const response = await publishFacebookPost({
+      message: message.trim(),
+      imageUrl: imageUrl && imageUrl.trim() ? imageUrl.trim() : null,
+    });
+    res.json({ ok: true, result: response });
+  } catch (error) {
+    res.status(500).json({ error: error.message || "Facebook publishing failed." });
   }
 });
 

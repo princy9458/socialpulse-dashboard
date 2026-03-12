@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { SocialAccount } from '../types/social';
 import SocialCard from './SocialCard';
 import { connectLinkedIn } from "../services/linkedinAuth";
+import { postToFacebook, postToInstagram } from "../services/metaPosting";
 
 interface SocialHubProps {
   accounts: SocialAccount[];
@@ -13,8 +14,16 @@ const SocialHub = ({ accounts, onConnect }: SocialHubProps): JSX.Element => {
   const [instagramConnected, setInstagramConnected] = useState(false);
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState<File | null>(null);
+  const [instagramImageUrl, setInstagramImageUrl] = useState("");
   const [twitterPostText, setTwitterPostText] = useState("");
   const [twitterConnecting, setTwitterConnecting] = useState(false);
+  const [facebookPostText, setFacebookPostText] = useState("");
+  const [facebookImage, setFacebookImage] = useState<File | null>(null);
+  const [facebookImageUrl, setFacebookImageUrl] = useState("");
+  const [instagramStatus, setInstagramStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [facebookStatus, setFacebookStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [instagramPosting, setInstagramPosting] = useState(false);
+  const [facebookPosting, setFacebookPosting] = useState(false);
 
   const shareToLinkedIn = () => {
     const url =
@@ -24,16 +33,32 @@ const SocialHub = ({ accounts, onConnect }: SocialHubProps): JSX.Element => {
     window.open(url, "_blank");
   };
 
-  const postToInstagram = () => {
-    window.open("https://www.instagram.com/", "_blank");
+  const handlePostToInstagram = async () => {
+    const trimmedCaption = caption.trim();
+    const imageUrl = instagramImageUrl.trim();
 
-    if (caption.trim()) {
-      alert(
-        "Instagram opened. Click the Create (+) button to upload, then paste this caption:\n\n" +
-          caption
-      );
-    } else {
-      alert("Instagram opened. Click the Create (+) button to upload your post.");
+    if (!imageUrl) {
+      setInstagramStatus({
+        type: "error",
+        message: "Instagram needs a public Image URL. Paste the image URL above.",
+      });
+      return;
+    }
+
+    setInstagramPosting(true);
+    setInstagramStatus(null);
+    try {
+      await postToInstagram({ caption: trimmedCaption, imageUrl });
+      setInstagramStatus({ type: "success", message: "Posted to Instagram successfully." });
+      setCaption("");
+      setInstagramImageUrl("");
+    } catch (error) {
+      setInstagramStatus({
+        type: "error",
+        message: error instanceof Error ? error.message : "Instagram publishing failed.",
+      });
+    } finally {
+      setInstagramPosting(false);
     }
   };
 
@@ -57,6 +82,32 @@ const SocialHub = ({ accounts, onConnect }: SocialHubProps): JSX.Element => {
 
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
     window.open(url, "_blank");
+  };
+
+  const handlePostToFacebook = async () => {
+    const message = facebookPostText.trim();
+    const imageUrl = facebookImageUrl.trim();
+
+    if (!message) {
+      setFacebookStatus({ type: "error", message: "Please write your Facebook post first." });
+      return;
+    }
+
+    setFacebookPosting(true);
+    setFacebookStatus(null);
+    try {
+      await postToFacebook({ message, imageUrl: imageUrl || null });
+      setFacebookStatus({ type: "success", message: "Posted to Facebook successfully." });
+      setFacebookPostText("");
+      setFacebookImageUrl("");
+    } catch (error) {
+      setFacebookStatus({
+        type: "error",
+        message: error instanceof Error ? error.message : "Facebook publishing failed.",
+      });
+    } finally {
+      setFacebookPosting(false);
+    }
   };
 
   const connectInstagram = () => {
@@ -179,6 +230,17 @@ const SocialHub = ({ accounts, onConnect }: SocialHubProps): JSX.Element => {
               Selected image: {image.name}
             </p>
           )}
+          <p style={{ marginTop: "6px", fontSize: "12px", color: "#94a3b8" }}>
+            Instagram API requires a public image URL. Upload your image to a public host and paste
+            the URL below.
+          </p>
+          <input
+            type="text"
+            placeholder="Paste public Image URL (required)"
+            value={instagramImageUrl}
+            onChange={(e) => setInstagramImageUrl(e.target.value)}
+            style={{ width: "400px", marginTop: "10px", display: "block" }}
+          />
 
           <textarea
             placeholder="Write your Instagram caption..."
@@ -188,7 +250,8 @@ const SocialHub = ({ accounts, onConnect }: SocialHubProps): JSX.Element => {
           />
 
           <button
-            onClick={postToInstagram}
+            onClick={handlePostToInstagram}
+            disabled={instagramPosting}
             style={{
               marginTop: "10px",
               padding: "10px 20px",
@@ -199,8 +262,77 @@ const SocialHub = ({ accounts, onConnect }: SocialHubProps): JSX.Element => {
               cursor: "pointer"
             }}
           >
-            Post to Instagram
+            {instagramPosting ? "Posting..." : "Post to Instagram"}
           </button>
+          {instagramStatus && (
+            <p
+              style={{
+                marginTop: "10px",
+                fontWeight: "bold",
+                color: instagramStatus.type === "success" ? "#28a745" : "#DC2626",
+              }}
+            >
+              {instagramStatus.message}
+            </p>
+          )}
+        </div>
+        <div style={{ marginTop: "40px" }}>
+          <h2>Create Facebook Post</h2>
+
+          <input
+            type="file"
+            onChange={(e) => setFacebookImage(e.target.files ? e.target.files[0] : null)}
+          />
+          {facebookImage && (
+            <p style={{ marginTop: "6px", fontSize: "12px", color: "#94a3b8" }}>
+              Selected image: {facebookImage.name}
+            </p>
+          )}
+          <p style={{ marginTop: "6px", fontSize: "12px", color: "#94a3b8" }}>
+            Facebook API uses a public image URL for image posts. Paste the URL if you want to post
+            with an image.
+          </p>
+          <input
+            type="text"
+            placeholder="Paste public Image URL (optional)"
+            value={facebookImageUrl}
+            onChange={(e) => setFacebookImageUrl(e.target.value)}
+            style={{ width: "400px", marginTop: "10px", display: "block" }}
+          />
+
+          <textarea
+            placeholder="Write your Facebook caption..."
+            value={facebookPostText}
+            onChange={(e) => setFacebookPostText(e.target.value)}
+            style={{ width: "400px", height: "120px", display: "block", marginTop: "10px" }}
+          />
+
+          <button
+            onClick={handlePostToFacebook}
+            disabled={facebookPosting}
+            style={{
+              marginTop: "10px",
+              padding: "10px 20px",
+              backgroundColor: "#1877F2",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer"
+            }}
+          >
+            {facebookPosting ? "Posting..." : "Post to Facebook"}
+          </button>
+          {facebookStatus && (
+            <p
+              style={{
+                marginTop: "10px",
+                fontWeight: "bold",
+                color: facebookStatus.type === "success" ? "#28a745" : "#DC2626",
+              }}
+            >
+              {facebookStatus.message}
+            </p>
+          )}
         </div>
       </div>
       <div className="cards-grid">
